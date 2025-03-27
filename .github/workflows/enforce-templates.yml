@@ -1,0 +1,64 @@
+# name: Add Template Files via PR
+# on:
+#   repository:
+#     types: [created]  # 监听新仓库创建事件
+
+# jobs:
+#   add-templates:
+#     runs-on: ubuntu-latest
+#     # 添加条件：只有仓库名称以intl-开头时才执行
+#     if: startsWith(github.event.repository.name, 'intl-')
+#     steps:
+#       # 步骤1：检出新创建的仓库
+#       - name: Checkout new repository
+#         uses: actions/checkout@v4
+#         with:
+#           repository: ${{ github.event.repository.full_name }}
+#           token: ${{ secrets.ORG_TOKEN }}  # 需有写入权限的 Token
+#           fetch-depth: 0
+
+#       # 步骤2：创建新分支
+#       - name: Create branch for templates
+#         run: |
+#           git config --global user.name "GitHub Actions"
+#           git config --global user.email "actions@github.com"
+#           git checkout -b add-template-files
+
+#       # 步骤3：检出模板仓库获取文件
+#       - name: Checkout template repository
+#         uses: actions/checkout@v4
+#         with:
+#           repository: 你的组织/intl-template
+#           path: template-repo
+#           token: ${{ secrets.ORG_TOKEN }}
+
+#       # 步骤4：复制模板文件
+#       - name: Add template files
+#         run: |
+#           mkdir -p .github/
+#           # 复制模板文件
+#           cp -r template-repo/templates/* ./
+#           cp template-repo/templates/.cursorignore ./.cursorignore
+#           # 可添加更多文件...
+#           rm -rf template-repo
+
+#       # 步骤5：提交更改
+#       - name: Commit changes
+#         run: |
+#           git add .
+#           git commit -m "chore: 添加模板文件和.cursorignore文件"
+#           git push origin add-template-files
+
+#       # 步骤6：自动创建 PR
+#       - name: Create PR via API
+#         run: |
+#           curl -X POST \
+#             -H "Authorization: token ${{ secrets.ORG_TOKEN }}" \
+#             -H "Accept: application/vnd.github.v3+json" \
+#             -d '{
+#               "title": "添加模板文件",
+#               "head": "add-template-files",
+#               "base": "main",
+#               "body": "自动添加必需的模板文件，包括.cursorignore文件。\n\n注意：master、duet和cocome分支必须包含.cursorignore文件。如果分支中尚未包含该文件，PR必须添加此文件才能合并。"
+#             }' \
+#             "https://api.github.com/repos/${{ github.event.repository.full_name }}/pulls"
