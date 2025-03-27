@@ -1,23 +1,43 @@
-# intl-template
+# Cursorignore Checker Probot
 
-这是一个模板仓库，用于为所有以 `intl-` 开头的仓库提供标准化配置和检查。
+这是一个GitHub Probot应用，用于监控组织中新创建的仓库，自动检查其master/duet/cocome分支是否包含`.cursorignore`文件。如果不存在，应用会自动创建PR提交该文件。
 
-## 功能
+## 功能特点
 
-本仓库包含以下主要功能：
+- 监控组织内新创建的仓库
+- 仅检查以`intl-`开头的仓库
+- 自动检查master、duet和cocome分支
+- 如分支存在但缺少`.cursorignore`文件，则创建PR
+- 使用`templates/.cursorignore`作为模板文件
 
-1. **模板文件自动添加**：当新建以 `intl-` 开头的仓库时，会自动创建 PR 添加必要的模板文件。
+## 使用方法
 
-2. **.cursorignore 文件强制检查**：对于 master、duet 和 cocome 分支，检查仓库中是否已存在 `.cursorignore` 文件。如果仓库中尚未包含该文件，则 PR 必须添加此文件才能合并。这确保了 Cursor AI 正确忽略不需要被处理的文件和目录。
+1. 安装依赖: `npm install`
 
-## 如何使用
+2. 注册GitHub App
+   - 设置必要的权限：`Repository contents`、`Pull requests`、`Repository metadata`
+   - 订阅事件: `Repository`
 
-### .cursorignore 文件
+3. 配置环境变量: 复制`.env.example`为`.env`并填写必要信息
 
-在您的仓库中创建一个名为 `.cursorignore` 的文件，该文件指定 Cursor 应该忽略的文件和目录。您可以参考 `templates/.cursorignore` 文件作为模板。
+4. 启动应用: `npm start`
 
-### 注意事项
+## 部署方式
 
-- 所有 master、duet 或 cocome 分支必须包含 .cursorignore 文件
-- 如果仓库中尚未包含该文件，PR 必须添加此文件才能合并
-- 模板文件会在新仓库创建时自动添加
+应用可以部署到任何支持Node.js的平台，如Heroku、Vercel、AWS等。确保设置正确的环境变量。
+
+## 维护
+
+- 确保`templates/.cursorignore`文件内容保持最新
+- 监控应用日志，确保正常运行
+
+## 开发
+
+```sh
+# 运行测试
+npm test
+```
+
+## 许可证
+
+MIT
