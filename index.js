@@ -60,7 +60,13 @@ module.exports = (app) => {
     const repo = context.payload.repository;
     const baseBranch = pr.base.ref;
     
-    customLog('info', `处理 PR ${eventType}事件，PR #${pr.number}，目标分支: ${baseBranch}`, {}, context);
+    // 检查组织名称是否为 "omiapp"，如果不是则直接返回
+    const orgName = repo.owner.login;
+    if (orgName !== 'omiapp') {
+      customLog('info', `仓库 ${repo.name} 属于组织 ${orgName}，不是 omiapp 组织，跳过处理`, {}, context);
+      return;
+    }
+    customLog('info', `处理 PR ${eventType}事件，PR #${pr.number}，目标分支: ${baseBranch}, 组织${orgName}`, {}, context);
     
     // 检查目标分支是否是我们要关注的分支
     if (!BRANCHES_TO_CHECK.includes(baseBranch)) {

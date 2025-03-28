@@ -30,7 +30,7 @@
 
 - 确保`templates/.cursorignore`文件内容保持最新
 - 监控应用日志，确保正常运行
-
+prop
 ## 开发
 
 ```sh
